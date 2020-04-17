@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="//www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
+    <script src="//www.gstatic.com/firebasejs/7.8.1/firebase-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="style.css" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyA9XqTLG6GAjNFt0w9TSlYSlUlpCLcNjeM",
+                authDomain: "test-firebase-auth-1.firebaseapp.com",
+                databaseURL: "https://test-firebase-auth-1.firebaseio.com",
+                projectId: "test-firebase-auth-1",
+                storageBucket: "test-firebase-auth-1.appspot.com",
+                messagingSenderId: "514502059460",
+                appId: "1:514502059460:web:70b12cd5ee4287f932f091"
+            };
+            // Initialize Firebase
+            var defaultProject = firebase.initializeApp(firebaseConfig);
+
+            var body = $(document.body);
+
+            body.find(".logout").click(function () {
+                if (defaultProject.auth().currentUser) {
+                    defaultProject.auth().signOut();
+                    window.location.href = "/";
+                }
+            });
+
+            // listening change state of user
+            defaultProject.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    console.log("Logged in user details");
+                    console.log(user);
+
+                    body.find(".name").html(user.displayName);
+                    body.find(".email").html(user.email);
+                }
+                else {
+                    window.location.href = "/";
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th colspan="2">User Details</th>
+    </tr>
+    <tr>
+        <td>Name</td>
+        <td><label class="name">Loading...</label></td>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td><label class="email">Loading...</label></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><a href="javascript:void(0)" class="logout">Logout</a></td>
+    </tr>
+</table>
+
+</body>
+</html>

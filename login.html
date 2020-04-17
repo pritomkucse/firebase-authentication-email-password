@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="//www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
+    <script src="//www.gstatic.com/firebasejs/7.8.1/firebase-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="style.css" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyA9XqTLG6GAjNFt0w9TSlYSlUlpCLcNjeM",
+                authDomain: "test-firebase-auth-1.firebaseapp.com",
+                databaseURL: "https://test-firebase-auth-1.firebaseio.com",
+                projectId: "test-firebase-auth-1",
+                storageBucket: "test-firebase-auth-1.appspot.com",
+                messagingSenderId: "514502059460",
+                appId: "1:514502059460:web:70b12cd5ee4287f932f091"
+            };
+            // Initialize Firebase
+            var defaultProject = firebase.initializeApp(firebaseConfig);
+
+            var body = $(document.body);
+
+            body.find(".login").click(function () {
+                var email = $.trim(body.find("[name=email]").val());
+                var password = $.trim(body.find("[name=password]").val());
+                if (email.length === 0) {
+                    alert("Email required");
+                    return;
+                }
+                if (password.length === 0) {
+                    alert("Password required");
+                    return;
+                }
+                body.find(".login").prop("disabled", true);
+                defaultProject.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                    console.log(error);
+                    if (error.message) {
+                        alert(error.message);
+                    }
+                    body.find(".signin").prop("disabled", false);
+                });
+            });
+
+            body.find(".register").click(function() {
+                window.location.href = "/";
+            });
+
+            body.find(".reset-password").click(function() {
+                window.location.href = "/reset-password.html";
+            });
+
+            // listening change state of user
+            defaultProject.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    window.location.href = "/user.html";
+                }
+                body.find(".login").prop("disabled", false);
+            });
+        });
+    </script>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th colspan="2">User Login</th>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td><input type="email" name="email" autocomplete="off" value=""/></td>
+    </tr>
+    <tr>
+        <td>Password</td>
+        <td><input type="password" name="password" value=""/></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <button type="button" class="login" disabled>Login</button>
+            <a href="javascript:void(0)" class="register">Register</a>
+            <a href="javascript:void(0)" class="reset-password">Reset Password</a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
